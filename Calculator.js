@@ -1,6 +1,6 @@
-var calculatePI = (function () {
+var calculator = (function() {
 
-    function factorial (n) {
+    function factorial(n) {
         if (n < 1) {
             return 1;
         }
@@ -9,7 +9,7 @@ var calculatePI = (function () {
     }
 
     return {
-        plouffBig : function (n) {
+        plouffBig : function(n) {
             var pi = 0;
             var k = 0;
             while (k < n) {
@@ -21,7 +21,7 @@ var calculatePI = (function () {
             return pi;
         },
 
-        bellardBig : function (n) {
+        bellardBig : function(n) {
             var pi = 0;
             var k = 0;
             while (k < n) {
@@ -35,28 +35,36 @@ var calculatePI = (function () {
             return pi;
         },
 
-        chudnovskyBig : function (n) {
-            var pi = 0;
-            var k = 0;
-            while (k < n) {
-                pi += Math.pow(-1, k)
-                        * (factorial(6 * k)
-                                / (Math.pow(factorial(k), 3) * (factorial(3 * k)))
-                                * (13591409 + 545140134 * k) / Math.pow(640320,
-                                (3 * k)));
-                k += 1;
+        calculatePI : function(max) {
+            var numbers = [];
+            var primes = [];
+            var limit = Math.sqrt(max);
+
+            for ( var i = 0; i < max; i++) {
+                numbers.push(true);
             }
-            pi = pi * Math.sqrt(10005) / 4270934400;
-            pi = Math.pow(pi, -1);
-            return pi;
+
+            for ( var i = 2; i <= limit; i++) {
+                if (numbers[i]) {
+                    for ( var j = i * i; j < max; j += i) {
+                        numbers[j] = false;
+                    }
+                }
+            }
+
+            for ( var i = 2; i < max; i++) {
+                if (numbers[i]) {
+                    primes.push(i);
+                }
+            }
+
+            return primes;
         }
     };
 }());
 
-(function () {
-    for ( var i = 0; i < 20; i++) {
-        console.log("Iteration number " + i + " " + calculatePI.plouffBig(i)
-                + " " + calculatePI.bellardBig(i) + " "
-                + calculatePI.chudnovskyBig(i));
-    }
+(function() {
+    console.log("Plouf Big: " + calculator.plouffBig(1000));
+    console.log("Bellard Big: " + calculator.bellardBig(1000));
+    console.log("PI: " + calculator.calculatePI(10000));
 })();
